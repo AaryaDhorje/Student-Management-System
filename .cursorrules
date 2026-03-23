@@ -1,0 +1,121 @@
+PROJECT: Student Management System
+
+FOLDER STRUCTURE
+backend/
+  app/
+    api/
+      v1/
+        students.py
+        courses.py
+        enrollments.py
+    services/
+        student_service.py
+        course_service.py
+        enrollment_service.py
+    repositories/
+        student_repository.py
+        course_repository.py
+        enrollment_repository.py
+    models/
+        student.py
+        course.py
+        enrollment.py
+    schemas/
+        student_schema.py
+        course_schema.py
+        enrollment_schema.py
+    core/
+        config.py
+        database.py
+        exceptions.py
+        responses.py
+    main.py
+
+frontend/
+  src/
+    components/
+    pages/
+    services/
+    App.jsx
+    main.jsx
+
+
+NAMING CONVENTIONS
+Python files use snake_case.
+React components use PascalCase.
+SQLAlchemy models use singular names with no suffix (Student, Course, Enrollment).
+Pydantic schemas must end with Schema (StudentCreateSchema, StudentResponseSchema).
+API route files must use plural resource names (students.py, courses.py).
+
+
+API RESPONSE FORMAT
+All API endpoints must return the standardized response envelope.
+
+Success response format:
+{
+  "success": true,
+  "data": {},
+  "message": "operation successful",
+  "meta": {}
+}
+
+Error response format:
+{
+  "success": false,
+  "error": {
+    "code": "ERROR_CODE",
+    "message": "human readable message",
+    "field": null
+  }
+}
+
+
+ERROR HANDLING RULES
+Never expose raw SQLAlchemy or internal exceptions to the API layer.
+Use custom exceptions defined in core/exceptions.py.
+All API errors must return the standardized error envelope.
+Use explicit error codes such as STUDENT_NOT_FOUND, COURSE_NOT_FOUND, VALIDATION_ERROR.
+
+
+LOGGING RULES
+INFO level logging:
+- Incoming API requests
+- Successful operations (create, update, delete)
+
+ERROR level logging:
+- Unhandled exceptions
+- Database failures
+- Validation errors that indicate system misuse
+
+Never log:
+- passwords
+- authentication tokens
+- personally identifiable information (PII)
+
+
+VALIDATION RULES
+All request bodies must be validated using Pydantic schemas.
+Email fields must use EmailStr validation.
+All IDs must be validated as UUID.
+Required fields must be enforced at schema level.
+
+
+ASYNC REQUIREMENTS
+All FastAPI route handlers must be asynchronous.
+Database interactions must use async-compatible sessions.
+Blocking operations must not run inside async routes.
+
+
+FILE SIZE LIMIT
+No single source file may exceed 200 lines.
+If a file approaches this limit, split logic into additional modules.
+
+
+TEST REQUIREMENTS
+Every service function must have a corresponding unit test.
+Service layer tests must mock repository interactions.
+Tests must verify:
+- successful operations
+- validation failures
+- permission failures
+- not-found errors
